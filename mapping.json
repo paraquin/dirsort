@@ -1,0 +1,22 @@
+[
+    {
+        "extensions": ["pdf", "doc", "docx"],
+        "to": "Documents"
+    },
+    {
+        "extensions": ["gz", "xz", "zip", "rar"],
+        "to": "Archieves"
+    },
+    {
+        "extensions": ["deb"],
+        "to": "Packages"
+    },
+    {
+        "extensions": ["mp4", "webm", "mov"],
+        "to": "Videos"
+    },
+    {
+        "extensions": ["jpg", "jpeg", "png", "webp", "gif"],
+        "to": "Images"
+    }    
+]
