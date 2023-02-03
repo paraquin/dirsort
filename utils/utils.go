@@ -2,7 +2,6 @@ package utils
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"path"
 )
@@ -16,13 +15,11 @@ func Error(text string) {
 // Copy src file content to dst
 // If dst contains not existing path, create it
 func CopyFile(src, dst string) error {
-	log.Printf("copy %s to %s...", src, dst)
 	buf, err := os.ReadFile(src)
 	if err != nil {
 		return err
 	}
-	if err = enshureDirs(dst); err != nil {
-		log.Println("error in enshureDir")
+	if err = EnsureDirs(dst); err != nil {
 		return err
 	}
 	err = os.WriteFile(dst, buf, 0644)
@@ -30,7 +27,7 @@ func CopyFile(src, dst string) error {
 }
 
 // Creates necessary directories for provided filepath
-func enshureDirs(filepath string) error {
+func EnsureDirs(filepath string) error {
 	filepath = path.Dir(filepath)
 	err := os.MkdirAll(filepath, os.ModePerm)
 	if os.IsExist(err) {
