@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"path/filepath"
 )
 
 // Write text to os.Stderr and exit.
@@ -34,4 +35,16 @@ func EnsureDirs(filepath string) error {
 		return nil
 	}
 	return err
+}
+
+func AbsolutePath(p string) string {
+	if p[0] == '~' {
+		homeDir, _ := os.UserHomeDir()
+		return path.Join(homeDir, p[1:])
+	}
+	abs, err := filepath.Abs(p)
+	if err != nil {
+		Error(err.Error())
+	}
+	return abs
 }

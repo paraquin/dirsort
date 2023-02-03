@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"log"
 	"os"
 
 	"github.com/paraquin/dirsort/config"
@@ -17,7 +16,6 @@ func init() {
 	flag.Parse()
 
 	if *mappingFile != "" {
-		log.Println(*mappingFile)
 		config.New(*mappingFile)
 	}
 	var err error

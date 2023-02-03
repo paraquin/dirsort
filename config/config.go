@@ -17,7 +17,7 @@ type Mapping struct {
 }
 
 func New(mappingFile string) {
-	fmt.Println(configPath())
+	mappingFile = utils.AbsolutePath(mappingFile)
 	err := utils.CopyFile(mappingFile, configPath())
 	if err != nil {
 		utils.Error(err.Error())
