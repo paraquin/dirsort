@@ -1,6 +1,6 @@
 [
     {
-        "extensions": ["pdf", "doc", "docx"],
+        "extensions": ["pdf", "doc", "docx", "txt"],
         "to": "Documents"
     },
     {
