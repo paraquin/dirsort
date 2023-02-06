@@ -10,13 +10,17 @@ import (
 )
 
 type Mapper struct {
-	mapping    []config.Mapping
-	currentDir string
+	mapping     []config.Mapping
+	currentDir  string
+	interactive bool
+	verbose     bool
 }
 
-func New(mapping []config.Mapping) Mapper {
+func New(mapping []config.Mapping, interactive bool, verbose bool) Mapper {
 	return Mapper{
-		mapping: mapping,
+		mapping:     mapping,
+		interactive: interactive,
+		verbose:     verbose,
 	}
 }
 
@@ -28,20 +32,35 @@ func (m *Mapper) Sort(dir string) {
 			for _, extension := range filetype.Extensions {
 				fileExtension := path.Ext(file.Name())[1:]
 				if fileExtension == extension {
-					m.Move(file, filetype.To)
+					m.handleMove(file, filetype.To)
 				}
 			}
 		}
 	}
 }
 
-func (m *Mapper) Move(file os.DirEntry, to string) {
+func (m *Mapper) handleMove(file os.DirEntry, to string) {
+	answer := "Y"
+	if m.interactive {
+		fmt.Printf("move %q to %q? [Y/n] ", file.Name(), to)
+		fmt.Scanln(&answer)
+	}
+	if answer == "Y" || answer == "y" || answer == "yes" {
+		m.move(file, to)
+	}
+
+}
+
+func (m *Mapper) move(file os.DirEntry, to string) {
 	oldPath := path.Join(m.currentDir, file.Name())
 	newPath := path.Join(m.currentDir, to, file.Name())
 	utils.EnsureDirs(newPath)
 	err := os.Rename(oldPath, newPath)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
+	}
+	if m.verbose {
+		fmt.Printf("%q moved to %q\n", file.Name(), to)
 	}
 }
 

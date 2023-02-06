@@ -1,18 +1,23 @@
 package main
 
 import (
-	"flag"
 	"os"
 
 	"github.com/paraquin/dirsort/config"
 	"github.com/paraquin/dirsort/mapper"
 	"github.com/paraquin/dirsort/utils"
+
+	flag "github.com/spf13/pflag"
 )
 
 var mapping []config.Mapping
+var isInteractive bool
+var isVerbose bool
 
 func init() {
-	mappingFile := flag.String("set-mapping", "", "move mapping JSON file to user's config directory")
+	mappingFile := flag.StringP("set-mapping", "s", "", "move mapping JSON file to user's config directory")
+	flag.BoolVarP(&isInteractive, "interactive", "i", false, "prompt before every move")
+	flag.BoolVarP(&isVerbose, "verbose", "v", false, "explain what is being done")
 	flag.Parse()
 
 	if *mappingFile != "" {
@@ -31,6 +36,6 @@ func main() {
 		dir = os.Args[1]
 	}
 
-	m := mapper.New(mapping)
+	m := mapper.New(mapping, isInteractive, isVerbose)
 	m.Sort(dir)
 }
