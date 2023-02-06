@@ -48,3 +48,13 @@ func AbsolutePath(p string) string {
 	}
 	return abs
 }
+
+// Returns file name extension withot a dot.
+// If file has not extension return empty string
+func Ext(file os.DirEntry) string {
+	ext := path.Ext(file.Name())
+	if len(ext) > 0 {
+		return ext[1:]
+	}
+	return ""
+}

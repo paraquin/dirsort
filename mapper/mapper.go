@@ -30,8 +30,7 @@ func (m *Mapper) Sort(dir string) {
 	for _, file := range files {
 		for _, filetype := range m.mapping {
 			for _, extension := range filetype.Extensions {
-				fileExtension := path.Ext(file.Name())[1:]
-				if fileExtension == extension {
+				if utils.Ext(file) == extension {
 					m.handleMove(file, filetype.To)
 				}
 			}
