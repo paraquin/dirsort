@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 )
 
-// Write text to os.Stderr and exit.
+// Writes text to os.Stderr and exit.
 func Error(text string) {
 	fmt.Fprintln(os.Stderr, text)
 	os.Exit(1)
@@ -37,6 +37,8 @@ func EnsureDirs(filepath string) error {
 	return err
 }
 
+// AbsolutePath returns a absolute representation of path.
+// In addition handles '~' symbol as user home directory.
 func AbsolutePath(p string) string {
 	if p[0] == '~' {
 		homeDir, _ := os.UserHomeDir()
@@ -49,8 +51,8 @@ func AbsolutePath(p string) string {
 	return abs
 }
 
-// Returns file name extension withot a dot.
-// If file has not extension return empty string
+// Returns the file name extension withot a dot.
+// If file has not extension returns empty string
 func Ext(file os.DirEntry) string {
 	ext := path.Ext(file.Name())
 	if len(ext) > 0 {
