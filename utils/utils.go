@@ -55,6 +55,9 @@ func AbsolutePath(p string) string {
 // If file has not extension returns empty string
 func Ext(file string) string {
 	ext := path.Ext(file)
+	if len(ext) == len(file) { // hidden file without extension
+		return ""
+	}
 	if len(ext) > 0 {
 		return ext[1:]
 	}
