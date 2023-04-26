@@ -37,7 +37,7 @@ func EnsureDirs(filepath string) error {
 	return err
 }
 
-// AbsolutePath returns a absolute representation of path.
+// AbsolutePath returns an absolute representation of path.
 // In addition handles '~' symbol as user home directory.
 func AbsolutePath(p string) string {
 	if p[0] == '~' {
