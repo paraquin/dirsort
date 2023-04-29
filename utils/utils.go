@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 )
 
-// Writes text to os.Stderr and exit.
-func Error(text string) {
-	fmt.Fprintln(os.Stderr, text)
+// Writes an error message to os.Stderr and exit.
+func Error(err error) {
+	fmt.Fprintln(os.Stderr, err.Error())
 	os.Exit(1)
 }
 
@@ -46,7 +46,7 @@ func AbsolutePath(p string) string {
 	}
 	abs, err := filepath.Abs(p)
 	if err != nil {
-		Error(err.Error())
+		Error(err)
 	}
 	return abs
 }

@@ -11,7 +11,7 @@ import (
 	flag "github.com/spf13/pflag"
 )
 
-var mapping []config.Mapping
+var mapping config.Mapping
 var isInteractive bool
 var isVerbose bool
 
@@ -32,7 +32,7 @@ func init() {
 	var err error
 	mapping, err = config.GetMapping()
 	if err != nil {
-		utils.Error(err.Error())
+		utils.Error(err)
 	}
 }
 
