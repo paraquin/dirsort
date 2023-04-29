@@ -16,7 +16,7 @@ var isInteractive bool
 var isVerbose bool
 
 func init() {
-	mappingFile := flag.StringP("set-mapping", "s", "", "move mapping JSON file to user's config directory")
+	mappingFile := flag.StringP("set-mapping", "s", "", "move mapping YAML file to user's config directory")
 	flag.BoolVarP(&isInteractive, "interactive", "i", false, "prompt before every move")
 	flag.BoolVarP(&isVerbose, "verbose", "v", false, "explain what is being done")
 	help := flag.BoolP("help", "h", false, "display this help and exit")

@@ -1,0 +1,10 @@
+mapping:
+  ~/Documents/Books: [pdf, djvu, fb2]
+  ~/Documents: [doc, docx, txt, csv]
+  Archieves: [rar, zip, gz, xz]
+  Images: [jpg, jpeg, png, webp, gif]
+  # You also may define list of extensions like this
+  Videos:
+    - mp4
+    - webm
+    - mov

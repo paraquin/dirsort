@@ -1,23 +1,18 @@
 package config
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 	"path"
 
 	"github.com/paraquin/dirsort/utils"
+	"gopkg.in/yaml.v3"
 )
 
 const AppName = "dirsort"
-const configFilename = "mapping.json"
+const configFilename = "mapping.yaml"
 
 type Mapping map[string][]string
-
-type mappingItem struct {
-	Extensions []string `json:"extensions"`
-	To         string   `json:"to"`
-}
 
 var configPath string
 
@@ -29,7 +24,6 @@ func init() {
 	}
 }
 
-// reada
 func New(mappingFilePath string) {
 	mappingFilePath = utils.AbsolutePath(mappingFilePath)
 	err := utils.CopyFile(mappingFilePath, configPath)
@@ -44,20 +38,14 @@ func GetMapping() (Mapping, error) {
 	if err != nil {
 		return nil, err
 	}
-	mappingItems := []mappingItem{}
-	err = json.Unmarshal(data, &mappingItems)
+	m := struct {
+		Mapping `yaml:"mapping"`
+	}{}
+	err = yaml.Unmarshal(data, &m)
 	if err != nil {
 		return nil, err
 	}
-	return mappingItemsToMapping(mappingItems), nil
-}
-
-func mappingItemsToMapping(items []mappingItem) map[string][]string {
-	result := make(map[string][]string)
-	for _, item := range items {
-		result[item.To] = item.Extensions
-	}
-	return result
+	return m.Mapping, nil
 }
 
 func readConfigFile() ([]byte, error) {
