@@ -1,3 +1,7 @@
 testdir
 *.sh
+*.bash
+!build_release.bash
 dirsort
+*.exe
+release
