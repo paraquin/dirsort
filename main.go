@@ -47,8 +47,12 @@ func main() {
 	if len(flag.Args()) != 1 {
 		printHelp()
 	}
-	dir := flag.Arg(0)
+
+	path := flag.Arg(0)
+	if utils.Ext(path) == "yaml" || utils.Ext(path) == "yml" {
+		config.New(path)
+	}
 
 	m := mapper.New(mapping, isInteractive, isVerbose)
-	m.Sort(dir)
+	m.Sort(path)
 }
