@@ -8,6 +8,11 @@ if [[ ! -d "$save_dir" ]]; then
     mkdir $save_dir
 fi
 
+if [[ ! -d "$package_name" ]]; then
+    mkdir $package_name
+fi
+cp config.yaml $package_name/
+
 for platform in "${platforms[@]}"
 do
     echo "build for $platform"
@@ -18,12 +23,14 @@ do
     if [ $GOOS = "windows" ]; then
         output_name+='.exe'
     fi
-    GOOS=$GOOS GOARCH=$GOARCH go build -o $output_name .
+    GOOS=$GOOS GOARCH=$GOARCH go build -o $package_name/$output_name .
     if [ $? -ne 0 ]; then
         echo 'An error has occured! Aborting the script execution...'
         exit 1
     fi
     archieve_name=$package_name'_'$GOOS'_'$GOARCH'.zip'
-    zip -r -1 $save_dir$archieve_name $output_name mapping.yaml
-    rm $output_name
+    zip -r -1 $save_dir$archieve_name $package_name
+    rm $package_name/$output_name
 done
+
+rm -r $package_name
