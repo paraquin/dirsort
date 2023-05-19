@@ -11,7 +11,6 @@ import (
 	flag "github.com/spf13/pflag"
 )
 
-var mapping config.Mapping
 var isInteractive bool
 var isVerbose bool
 
@@ -28,11 +27,6 @@ func init() {
 
 	if *mappingFile != "" {
 		config.New(*mappingFile)
-	}
-	var err error
-	mapping, err = config.GetMapping()
-	if err != nil {
-		utils.Error(err)
 	}
 }
 
@@ -51,6 +45,11 @@ func main() {
 	path := flag.Arg(0)
 	if utils.Ext(path) == "yaml" || utils.Ext(path) == "yml" {
 		config.New(path)
+	}
+
+	mapping, err := config.GetMapping()
+	if err != nil {
+		utils.Error(err)
 	}
 
 	m := mapper.New(mapping, isInteractive, isVerbose)
