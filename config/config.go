@@ -10,7 +10,7 @@ import (
 )
 
 const AppName = "dirsort"
-const configFilename = "mapping.yaml"
+const configFilename = "config.yaml"
 
 type Mapping map[string][]string
 
