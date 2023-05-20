@@ -4,4 +4,4 @@ testdir
 !build_release.bash
 dirsort
 *.exe
-release
+build/
