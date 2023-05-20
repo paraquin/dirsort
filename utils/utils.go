@@ -42,7 +42,7 @@ func EnsureDirs(filepath string) error {
 func AbsolutePath(p string) string {
 	if p[0] == '~' {
 		homeDir, _ := os.UserHomeDir()
-		return path.Join(homeDir, p[1:])
+		return filepath.Join(homeDir, p[1:])
 	}
 	abs, err := filepath.Abs(p)
 	if err != nil {

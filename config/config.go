@@ -3,7 +3,7 @@ package config
 import (
 	"fmt"
 	"os"
-	"path"
+	"path/filepath"
 
 	"github.com/paraquin/dirsort/utils"
 	"gopkg.in/yaml.v3"
@@ -62,5 +62,5 @@ func getConfigPath() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return path.Join(cfgPath, AppName, configFilename), nil
+	return filepath.Join(cfgPath, AppName, configFilename), nil
 }

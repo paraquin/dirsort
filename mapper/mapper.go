@@ -3,7 +3,7 @@ package mapper
 import (
 	"fmt"
 	"os"
-	"path"
+	"path/filepath"
 
 	"github.com/paraquin/dirsort/config"
 	"github.com/paraquin/dirsort/utils"
@@ -76,8 +76,8 @@ func (m *Mapper) informUser(filename, movedTo string) {
 
 func (m *Mapper) move(file os.DirEntry, dst string) (err error) {
 	dstAbsolute := utils.AbsolutePath(dst)
-	oldPath := path.Join(m.currentDir, file.Name())
-	newPath := path.Join(dstAbsolute, file.Name())
+	oldPath := filepath.Join(m.currentDir, file.Name())
+	newPath := filepath.Join(dstAbsolute, file.Name())
 	err = utils.EnsureDirs(newPath)
 	if err != nil {
 		return
