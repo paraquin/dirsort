@@ -10,7 +10,7 @@ Download from [here](https://github.com/paraquin/dirsort/releases) and extract.
 To apply mapping configuration, drag and drop `config.yaml` to `dirsort.exe`.
 To sort needed folder, drag and drop it to `dirsort.exe`
 
-Or... you may use lunux way.
+Or... you may use Linux way.
 
 ### Linux and macOS
 To apply mapping configuration, run:
