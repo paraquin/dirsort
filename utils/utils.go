@@ -28,9 +28,9 @@ func CopyFile(src, dst string) error {
 }
 
 // Creates necessary directories for provided filepath
-func EnsureDirs(filepath string) error {
-	filepath = path.Dir(filepath)
-	err := os.MkdirAll(filepath, os.ModePerm)
+func EnsureDirs(file string) error {
+	dir := filepath.Dir(file)
+	err := os.MkdirAll(dir, os.ModePerm)
 	if os.IsExist(err) {
 		return nil
 	}
