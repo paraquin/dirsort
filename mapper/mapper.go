@@ -2,6 +2,7 @@ package mapper
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 
@@ -25,12 +26,12 @@ func New(mapping config.Mapping, interactive bool, verbose bool) Mapper {
 }
 
 func (m *Mapper) Sort(dir string) {
-	m.currentDir = dir
-	err := os.Chdir(dir)
+	m.currentDir = utils.AbsolutePath(dir)
+	err := os.Chdir(m.currentDir)
 	if err != nil {
 		utils.Error(err)
 	}
-	files := getRegularFiles(dir)
+	files := getRegularFiles(m.currentDir)
 	for _, file := range files {
 		for dst, extensions := range m.mapping {
 			for _, extension := range extensions {
@@ -55,16 +56,19 @@ func (m *Mapper) handleMove(file os.DirEntry, dst string) {
 }
 
 func (m *Mapper) promptUser(file os.DirEntry, to string) bool {
-	answer := "Y" // Y is a default selection
-	if m.interactive {
-		fmt.Printf("move %q to %q? [Y/n] ", file.Name(), utils.AbsolutePath(to))
-		fmt.Scanln(&answer)
-	} else {
+	if !m.interactive {
 		return true
 	}
+
+	answer := "Y" // Y is a default selection
+
+	fmt.Printf("move %q to %q? [Y/n] ", file.Name(), utils.AbsolutePath(to))
+	fmt.Scanln(&answer)
+
 	if answer != "Y" && answer != "y" && answer != "yes" {
 		return false
 	}
+
 	return true
 }
 
@@ -87,7 +91,10 @@ func (m *Mapper) move(file os.DirEntry, dst string) (err error) {
 }
 
 func getRegularFiles(dir string) []os.DirEntry {
-	dirEntries, _ := os.ReadDir(dir)
+	dirEntries, err := os.ReadDir(utils.AbsolutePath(dir))
+	if err != nil {
+		log.Println(err)
+	}
 	files := make([]os.DirEntry, 0, len(dirEntries))
 	for _, entry := range dirEntries {
 		if entry.Type().IsRegular() {
