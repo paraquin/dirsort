@@ -1,3 +1,5 @@
+//go:build uinx
+
 package utils
 
 import (

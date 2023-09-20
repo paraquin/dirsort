@@ -1,4 +1,13 @@
+//go:build windows
+
 package utils
+
+import (
+	"os"
+	"os/user"
+	"path/filepath"
+	"testing"
+)
 
 func TestAbsolutePath(t *testing.T) {
 	currentDir, _ := os.Getwd()
@@ -10,8 +19,8 @@ func TestAbsolutePath(t *testing.T) {
 	}{
 		{
 			desc:   "already absolute path",
-			expect: `C:\\users\user\testdir`,
-			got:    AbsolutePath(`C:\\users\user\testdir`),
+			expect: `C:\users\user\testdir`,
+			got:    AbsolutePath(`C:\users\user\testdir`),
 		},
 		{
 			desc:   "user home directory symbol",
