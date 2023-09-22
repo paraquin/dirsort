@@ -36,33 +36,18 @@ func (m *Mapper) Sort(dir string) {
 		for dst, extensions := range m.mapping {
 			for _, extension := range extensions {
 				if utils.Ext(file.Name()) == extension {
-					m.handleMove(file, dst)
+					m.move(file, dst)
 				}
 			}
 		}
 	}
 }
 
-func (m *Mapper) handleMove(file os.DirEntry, dst string) {
-	if !m.promptUser(file, dst) {
-		return
-	}
-	err := m.move(file, dst)
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err.Error())
-		return
-	}
-	m.informUser(file.Name(), dst)
-}
-
-func (m *Mapper) promptUser(file os.DirEntry, to string) bool {
-	if !m.interactive {
-		return true
-	}
+func (m *Mapper) askUser(questionFormat string, a ...any) bool {
+	question := fmt.Sprintf(questionFormat, a...)
+	fmt.Printf("%s [Y/n] ", question)
 
 	answer := "Y" // Y is a default selection
-
-	fmt.Printf("move %q to %q? [Y/n] ", file.Name(), utils.AbsolutePath(to))
 	fmt.Scanln(&answer)
 
 	if answer != "Y" && answer != "y" && answer != "yes" {
@@ -74,19 +59,42 @@ func (m *Mapper) promptUser(file os.DirEntry, to string) bool {
 
 func (m *Mapper) informUser(filename, movedTo string) {
 	if m.verbose {
-		fmt.Printf("%q moved to %q\n", filename, movedTo)
+		fmt.Printf("%s moved to %s\n", filename, movedTo)
 	}
 }
 
-func (m *Mapper) move(file os.DirEntry, dst string) (err error) {
+func (m *Mapper) move(file os.DirEntry, dst string) {
 	dstAbsolute := utils.AbsolutePath(dst)
 	oldPath := filepath.Join(m.currentDir, file.Name())
 	newPath := filepath.Join(dstAbsolute, file.Name())
-	err = utils.EnsureDirs(newPath)
+
+	if m.interactive && !m.askUser("Move %s to %s?", file.Name(), dstAbsolute) {
+		return
+	}
+
+	if utils.FileExists(newPath) {
+		if !m.interactive {
+			return
+		}
+		if !m.askUser("%s already exists. Rewrite?", newPath) {
+			return
+		}
+	}
+
+	err := utils.EnsureDirs(newPath)
 	if err != nil {
+		utils.Error(err)
 		return
 	}
 	err = os.Rename(oldPath, newPath)
+	if err != nil {
+		// Move file because os.Rename can't work with different drives.
+		err = utils.MoveFile(oldPath, newPath)
+		if err != nil {
+			utils.Error(err)
+		}
+	}
+	m.informUser(file.Name(), dstAbsolute)
 	return
 }
 
