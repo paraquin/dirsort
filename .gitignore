@@ -5,3 +5,4 @@ testdir
 dirsort
 *.exe
 build/
+.vscode
