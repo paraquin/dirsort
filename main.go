@@ -13,11 +13,13 @@ import (
 
 var isInteractive bool
 var isVerbose bool
+var noWaiting bool
 
 func init() {
 	mappingFile := flag.StringP("set-mapping", "s", "", "move mapping YAML file to user's config directory")
 	flag.BoolVarP(&isInteractive, "interactive", "i", false, "prompt before every move")
 	flag.BoolVarP(&isVerbose, "verbose", "v", false, "explain what is being done")
+	flag.BoolVarP(&noWaiting, "no-waiting", "W", false, "does not require to press a button to exit")
 	help := flag.BoolP("help", "h", false, "display this help and exit")
 	flag.Parse()
 
@@ -30,28 +32,45 @@ func init() {
 	}
 }
 
-// Prints help message end exit
+// Prints help message
 func printHelp() {
 	fmt.Printf("Usage: %s [OPTIONS]... DIR\n", os.Args[0])
 	fmt.Println(flag.CommandLine.FlagUsages())
-	os.Exit(0)
 }
 
 func main() {
+	if !noWaiting {
+		defer wait()
+	}
+
 	if len(flag.Args()) != 1 {
 		printHelp()
+		return
 	}
 
 	path := flag.Arg(0)
 	if utils.Ext(path) == "yaml" || utils.Ext(path) == "yml" {
-		config.New(path)
+		err := config.New(path)
+		if err != nil {
+			utils.Error(err)
+			return
+		} else {
+			fmt.Println("Configuration is successfully updated.")
+		}
+		return
 	}
 
 	mapping, err := config.GetMapping()
 	if err != nil {
 		utils.Error(err)
+		return
 	}
 
 	m := mapper.New(mapping, isInteractive, isVerbose)
 	m.Sort(path)
+}
+
+func wait() {
+	fmt.Print("\nPress ENTER to exit...")
+	fmt.Scanln()
 }

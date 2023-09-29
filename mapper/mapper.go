@@ -30,6 +30,7 @@ func (m *Mapper) Sort(dir string) {
 	err := os.Chdir(m.currentDir)
 	if err != nil {
 		utils.Error(err)
+		return
 	}
 	files := getRegularFiles(m.currentDir)
 	for _, file := range files {

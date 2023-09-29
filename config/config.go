@@ -24,13 +24,10 @@ func init() {
 	}
 }
 
-func New(mappingFilePath string) {
+func New(mappingFilePath string) error {
 	mappingFilePath = utils.AbsolutePath(mappingFilePath)
 	err := utils.CopyFile(mappingFilePath, configPath)
-	if err != nil {
-		utils.Error(err)
-	}
-	os.Exit(0)
+	return err
 }
 
 func GetMapping() (Mapping, error) {
