@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/paraquin/dirsort/config"
 	"github.com/paraquin/dirsort/mapper"
@@ -34,7 +35,8 @@ func init() {
 
 // Prints help message
 func printHelp() {
-	fmt.Printf("Usage: %s [OPTIONS]... DIR\n", os.Args[0])
+	executableName := filepath.Base(os.Args[0])
+	fmt.Printf("Usage: %s [OPTIONS]... DIR\n", executableName)
 	fmt.Println(flag.CommandLine.FlagUsages())
 }
 
